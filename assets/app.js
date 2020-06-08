@@ -64,33 +64,26 @@ var button2El = $("#button2");
 var button3El = $("#button3");
 var button4El = $("#button4");
 var time = $("#timer");
-var n = 0;
-var score = 0;
-function questionFunc(arr) {
-	// console.log(arr);
 
+var buttons = $("button");
+var n = 0;
+var score = -1;
+function questionFunc(arr) {
 	header.html("<h3>" + arr[n].question + "</h3>");
-	var buttons = $("button");
 
 	buttons.each(function (i) {
 		$(this)
 			.text(arr[n].choices[i])
 			.prop("value", arr[n].choices[i])
 			.click(function () {
-				// console.log(this.value);
 				if (this.value === arr[n].answer) {
 					console.log("correct");
 					n++;
-
 					score++;
 					questionFunc(questions);
-				} else {
-					// console.log(this.text);
-					// console.log(false);
-					n++;
-
-					questionFunc(questions);
 				}
+				n++;
+				questionFunc(questions);
 			});
 	});
 }
