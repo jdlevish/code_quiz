@@ -3,104 +3,104 @@
 var questions = [
 	{
 		question: "which is the logical or operator?",
-		choices: ["===", "&&", "||", "+"],
+		choices: { 0: "||", 1: "&&", 2: "===", 3: "+" },
 		answer: "||",
 	},
 	{
 		question:
 			"What is the HTML tag under which one can write the JavaScript code?",
-		choices: ["<javascript>", "<scripted>", "<script>", "<js>"],
+		choices: { 0: "<javascript>", 1: "<scripted>", 2: "<script>", 3: "<js>" },
 		answer: "<script>",
 	},
 	{
 		question:
 			"Which of the following is the correct syntax to display “alert” in an alert box using JavaScript?",
-		choices: [
-			'alertbox("alert")',
-			'msg("alert")',
-			'msgbox("alert")',
-			'alert("alert")',
-		],
-		answer: 'alert("alert")',
+		choices: {
+			0: "alertbox('alert')",
+			1: "msg('alert')",
+			2: "msgbox('alert')",
+			3: "alert('alert')",
+		},
+		answer: "alert('alert')",
+	},
+	{
+		question:
+			"Which of the following is the correct syntax to display “alert” in an alert box using JavaScript?",
+		choices: {
+			0: "alertbox('alert')",
+			1: "msg('alert')",
+			2: "msgbox('alert')",
+			3: "alert('alert')",
+		},
+		answer: "alert('alert')",
+	},
+	{
+		question:
+			"Which of the following is the correct syntax to display “alert” in an alert box using JavaScript?",
+		choices: {
+			0: "alertbox('alert')",
+			1: "msg('alert')",
+			2: "msgbox('alert')",
+			3: "alert('alert')",
+		},
+		answer: "alert('alert')",
+	},
+	{
+		question:
+			"Which of the following is the correct syntax to display “alert” in an alert box using JavaScript?",
+		choices: {
+			0: "alertbox('alert')",
+			1: "msg('alert')",
+			2: "msgbox('alert')",
+			3: "alert('alert')",
+		},
+		answer: "alert('alert')",
 	},
 ];
 // button variables
 var header = $("#header");
-var startButton = $("#start");
-var highScoreButton = $("#highScores");
-var rulesButton = $("#rules");
-var learnButton = $("#learn");
+var button1El = $("#button1");
+var button2El = $("#button2");
+var button3El = $("#button3");
+var button4El = $("#button4");
 var time = $("#timer");
+var n = 0;
+var score = 0;
+function questionFunc(arr) {
+	// console.log(arr);
+
+	header.html("<h3>" + arr[n].question + "</h3>");
+	var buttons = $("button");
+
+	buttons.each(function (i) {
+		$(this)
+			.text(arr[n].choices[i])
+			.prop("value", arr[n].choices[i])
+			.click(function () {
+				// console.log(this.value);
+				if (this.value === arr[n].answer) {
+					console.log("correct");
+					n++;
+
+					score++;
+					questionFunc(questions);
+				} else {
+					// console.log(this.text);
+					// console.log(false);
+					n++;
+
+					questionFunc(questions);
+				}
+			});
+	});
+}
 
 // code that initiates a 60 second timer on start button click
-var counter = 60;
-var interval = setInterval(function () {
-	counter--;
-	if (counter <= 0) {
-		clearInterval(interval);
-		time.html("<h3>Count down complete</h3>");
-		return;
-	} else {
-		time.text(counter);
-	}
-}, 1000);
-startButton.on("click", function () {
-	// 	header.html("<h1>" + questions[i].question + "</h1>");
-	// 	startButton.html(
-	// 		"<button id='start' type='button' class='btn btn-primary btn-lg btn-block'>" +
-	// 			questions[i].choices[1] +
-	// 			"</button>"
-	// 	);
-	// });
-	var i = 0;
+$(document).ready(function () {
+	// initial start button click
+	button1El.click(function () {
+		questionFunc(questions);
+	});
 
-	questionFunc();
-	function questionFunc() {
-		var score = 0;
-		var i = 0;
-
-		header.html("<h1>" + questions[i].question + "</h1>");
-		startButton.text(questions[i].choices[0]).on("click", function () {
-			if (this.value === questions[i].answer) {
-				console.log("correct");
-				score++;
-			} else {
-				console.log(false);
-				i++;
-			}
-		});
-		startButton.prop("value", questions[i].choices[0]);
-		highScoreButton.text(questions[i].choices[1]).on("click", function () {
-			if (this.value === questions[i].answer) {
-				console.log("correct");
-				score++;
-			} else {
-				console.log(false);
-				i++;
-			}
-		});
-		highScoreButton.prop("value", questions[i].choices[1]);
-		rulesButton.text(questions[i].choices[2]).on("click", function () {
-			if (this.value === questions[i].answer) {
-				console.log("correct");
-				score++;
-				console.log(score);
-			} else {
-				console.log(false);
-				i++;
-			}
-		});
-		rulesButton.prop("value", questions[i].choices[2]);
-		learnButton.text(questions[i].choices[3]).on("click", function () {
-			if (this.value === questions[i].answer) {
-				console.log("correct");
-				score++;
-			} else {
-				console.log(false);
-				i++;
-			}
-		});
-		learnButton.prop("value", questions[i].choices[3]);
-		console.log($("button"));
-	}
+	// function that displays question and answer choices and checks for correct answers
 });
