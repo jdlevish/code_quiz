@@ -10,7 +10,7 @@ var questions = [
 		question:
 			"What is the HTML tag under which one can write the JavaScript code?",
 		choices: ["javascript", "scripted", "script", "js"],
-		answer: "<script>",
+		answer: "script",
 	},
 	{
 		question:
@@ -42,26 +42,29 @@ function start() {
 	timer = setInterval(function () {
 		timeLeft--;
 		document.getElementById("timeLeft").innerHTML = timeLeft;
-		//proceed to end the game function when timer is below 0 at any time
+		//once timer hits 0 this runs the end function to end the quiz
 		if (timeLeft <= 0) {
 			clearInterval(timer);
-			endGame();
+			endQuiz();
 		}
 	}, 1000);
 
 	next();
 }
 
-//stop the timer to end the game 
-function endGame() {
+//this function ends the quiz
+function endQuiz() {
 	clearInterval(timer);
 
 	var quizContent = `
 <h2>Game over!</h2>
-<h3>Here is the final score` + score + ` /100!</h3>
+<h3>Here is the final score` + score + ` /3!</h3>
+<div class="pb-4">
+<h3>Enter your name here</h3>
+<input   type="text" id="name" > 
+</div>
 
-<input type="text" id="name" > 
-<button  class="btn btn-primary btn-lg btn-block" onclick="setScore()">See my score!</button>`;
+<button  class=" btn btn-primary btn-lg btn-block" onclick="setScore()">See my score!</button>`;
 
 	document.getElementById("quizBody").innerHTML = quizContent;
 }
@@ -89,11 +92,11 @@ function clearScore() {
 	localStorage.setItem("highscore", "");
 	localStorage.setItem("highscoreName", "");
 
-	resetGame();
+	resetQuiz();
 }
 
 //reset the game 
-function resetGame() {
+function resetQuiz() {
 	clearInterval(timer);
 	score = 0;
 	currentQuestion = -1;
@@ -117,7 +120,7 @@ function incorrect() {
 
 //increases the score by 20points if the user chooses the correct answer
 function correct() {
-	score += 20;
+	score += 1;
 	next();
 }
 
@@ -126,14 +129,14 @@ function next() {
 	currentQuestion++;
 
 	if (currentQuestion > questions.length - 1) {
-		endGame();
+		endQuiz();
 		return;
 	}
 
 	var quizContent = "<h2>" + questions[currentQuestion].question + "</h2>"
 
 	for (var buttonLoop = 0; buttonLoop < questions[currentQuestion].choices.length; buttonLoop++) {
-		var buttonCode = "<button onclick=\"[ANS]\">[CHOICE]</button>";
+		var buttonCode = "<button class='btn btn-primary btn-lg btn-block' onclick=\"[ANS]\">[CHOICE]</button>";
 		buttonCode = buttonCode.replace("[CHOICE]", questions[currentQuestion].choices[buttonLoop]);
 		if (questions[currentQuestion].choices[buttonLoop] == questions[currentQuestion].answer) {
 			buttonCode = buttonCode.replace("[ANS]", "correct()");
