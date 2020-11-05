@@ -3,97 +3,146 @@
 var questions = [
 	{
 		question: "which is the logical or operator?",
-		choices: { 0: "||", 1: "&&", 2: "===", 3: "+" },
+		choices: ["||", "&&", "===", "+"],
 		answer: "||",
 	},
 	{
 		question:
 			"What is the HTML tag under which one can write the JavaScript code?",
-		choices: { 0: "<javascript>", 1: "<scripted>", 2: "<script>", 3: "<js>" },
+		choices: ["javascript", "scripted", "script", "js"],
 		answer: "<script>",
 	},
 	{
 		question:
 			"Which of the following is the correct syntax to display “alert” in an alert box using JavaScript?",
-		choices: {
-			0: "alertbox('alert')",
-			1: "msg('alert')",
-			2: "msgbox('alert')",
-			3: "alert('alert')",
-		},
+		choices: [
+			"alertbox('alert')",
+			"msg('alert')",
+			"msgbox('alert')",
+			"alert('alert')",
+		],
 		answer: "alert('alert')",
 	},
-	{
-		question:
-			"Which of the following is the correct syntax to display “alert” in an alert box using JavaScript?",
-		choices: {
-			0: "alertbox('alert')",
-			1: "msg('alert')",
-			2: "msgbox('alert')",
-			3: "alert('alert')",
-		},
-		answer: "alert('alert')",
-	},
-	{
-		question:
-			"Which of the following is the correct syntax to display “alert” in an alert box using JavaScript?",
-		choices: {
-			0: "alertbox('alert')",
-			1: "msg('alert')",
-			2: "msgbox('alert')",
-			3: "alert('alert')",
-		},
-		answer: "alert('alert')",
-	},
-	{
-		question:
-			"Which of the following is the correct syntax to display “alert” in an alert box using JavaScript?",
-		choices: {
-			0: "alertbox('alert')",
-			1: "msg('alert')",
-			2: "msgbox('alert')",
-			3: "alert('alert')",
-		},
-		answer: "alert('alert')",
-	},
+
+
 ];
 // button variables
-var header = $("#header");
-var button1El = $("#button1");
-var button2El = $("#button2");
-var button3El = $("#button3");
-var button4El = $("#button4");
-var time = $("#timer");
+//setting the numerical variables for the functions.. scores and timers.. 
+var score = 0;
+var currentQuestion = -1;
+var timeLeft = 0;
+var timer;
 
-var buttons = $("button");
-var n = 0;
-var score = -1;
-function questionFunc(arr) {
-	header.html("<h3>" + arr[n].question + "</h3>");
+//starts the countdown timer once user clicks the 'start' button
+function start() {
 
-	buttons.each(function (i) {
-		$(this)
-			.text(arr[n].choices[i])
-			.prop("value", arr[n].choices[i])
-			.click(function () {
-				if (this.value === arr[n].answer) {
-					console.log("correct");
-					n++;
-					score++;
-					questionFunc(questions);
-				}
-				n++;
-				questionFunc(questions);
-			});
-	});
+	timeLeft = 75;
+	document.getElementById("timeLeft").innerHTML = timeLeft;
+
+	timer = setInterval(function () {
+		timeLeft--;
+		document.getElementById("timeLeft").innerHTML = timeLeft;
+		//proceed to end the game function when timer is below 0 at any time
+		if (timeLeft <= 0) {
+			clearInterval(timer);
+			endGame();
+		}
+	}, 1000);
+
+	next();
 }
 
-// code that initiates a 60 second timer on start button click
-$(document).ready(function () {
-	// initial start button click
-	button1El.click(function () {
-		questionFunc(questions);
-	});
+//stop the timer to end the game 
+function endGame() {
+	clearInterval(timer);
 
-	// function that displays question and answer choices and checks for correct answers
-});
+	var quizContent = `
+<h2>Game over!</h2>
+<h3>Here is the final score` + score + ` /100!</h3>
+
+<input type="text" id="name" > 
+<button  class="btn btn-primary btn-lg btn-block" onclick="setScore()">See my score!</button>`;
+
+	document.getElementById("quizBody").innerHTML = quizContent;
+}
+
+//store the scores on local storage
+function setScore() {
+	localStorage.setItem("highscore", score);
+	localStorage.setItem("highscoreName", document.getElementById('name').value);
+	getScore();
+}
+
+
+function getScore() {
+	var quizContent = `
+<h2>` + localStorage.getItem("highscoreName") + `'s highscore is:</h2>
+<h1>` + localStorage.getItem("highscore") + `</h1><br> 
+<button class="btn btn-primary btn-lg btn-block" onclick="clearScore()">Clear score!</button><button class="btn btn-primary btn-lg btn-block" onclick="resetGame()">Try Again!</button>
+`;
+
+	document.getElementById("quizBody").innerHTML = quizContent;
+}
+
+//clears the score name and value in the local storage if the user selects 'clear score'
+function clearScore() {
+	localStorage.setItem("highscore", "");
+	localStorage.setItem("highscoreName", "");
+
+	resetGame();
+}
+
+//reset the game 
+function resetGame() {
+	clearInterval(timer);
+	score = 0;
+	currentQuestion = -1;
+	timeLeft = 0;
+	timer = null;
+
+	document.getElementById("timeLeft").innerHTML = timeLeft;
+
+	var quizContent = `
+
+<button class="btn btn-primary btn-lg btn-block" onclick="start()">Start the JavaScript Quiz again</button>`;
+
+	document.getElementById("quizBody").innerHTML = quizContent;
+}
+
+//deduct 15seconds from the timer if user chooses an incorrect answer
+function incorrect() {
+	timeLeft -= 15;
+	next();
+}
+
+//increases the score by 20points if the user chooses the correct answer
+function correct() {
+	score += 20;
+	next();
+}
+
+//loops through the questions 
+function next() {
+	currentQuestion++;
+
+	if (currentQuestion > questions.length - 1) {
+		endGame();
+		return;
+	}
+
+	var quizContent = "<h2>" + questions[currentQuestion].question + "</h2>"
+
+	for (var buttonLoop = 0; buttonLoop < questions[currentQuestion].choices.length; buttonLoop++) {
+		var buttonCode = "<button onclick=\"[ANS]\">[CHOICE]</button>";
+		buttonCode = buttonCode.replace("[CHOICE]", questions[currentQuestion].choices[buttonLoop]);
+		if (questions[currentQuestion].choices[buttonLoop] == questions[currentQuestion].answer) {
+			buttonCode = buttonCode.replace("[ANS]", "correct()");
+		} else {
+			buttonCode = buttonCode.replace("[ANS]", "incorrect()");
+		}
+		quizContent += buttonCode
+	}
+
+
+	document.getElementById("quizBody").innerHTML = quizContent;
+}
