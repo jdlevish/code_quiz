@@ -1,5 +1,4 @@
-// declared variables for game
-//questions is an array of questions saved in the form of objects, the key value pair choices will contain the multiple choice answers, and the answer key will contain the correct answer
+//array of questions for the quiz
 var questions = [
 	{
 		question: "which is the logical or operator?",
@@ -26,8 +25,8 @@ var questions = [
 
 
 ];
-// button variables
-//setting the numerical variables for the functions.. scores and timers.. 
+
+
 var score = 0;
 var currentQuestion = -1;
 var timeLeft = 0;
@@ -69,7 +68,7 @@ function endQuiz() {
 	document.getElementById("quizBody").innerHTML = quizContent;
 }
 
-//store the scores on local storage
+//store the scores in local storage
 function setScore() {
 	localStorage.setItem("highscore", score);
 	localStorage.setItem("highscoreName", document.getElementById('name').value);
@@ -95,7 +94,7 @@ function clearScore() {
 	resetQuiz();
 }
 
-//reset the game 
+//this function resets the quiz
 function resetQuiz() {
 	clearInterval(timer);
 	score = 0;
@@ -112,19 +111,18 @@ function resetQuiz() {
 	document.getElementById("quizBody").innerHTML = quizContent;
 }
 
-//deduct 15seconds from the timer if user chooses an incorrect answer
 function incorrect() {
 	timeLeft -= 15;
 	next();
 }
 
-//increases the score by 20points if the user chooses the correct answer
+
 function correct() {
 	score += 1;
 	next();
 }
 
-//loops through the questions 
+
 function next() {
 	currentQuestion++;
 
